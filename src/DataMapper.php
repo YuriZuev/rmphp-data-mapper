@@ -9,7 +9,7 @@ use Exception;
 use ReflectionException;
 use Stringable;
 
-class DataObjectMapper extends AbstractDataMapper {
+class DataMapper extends AbstractDataMapper {
 
 	/**
 	 * @param object $object
