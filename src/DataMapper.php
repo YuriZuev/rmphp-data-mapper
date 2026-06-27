@@ -89,11 +89,13 @@ class DataMapper extends AbstractDataMapper {
 	/**
 	 * @param object $object
 	 * @param array|object $data
+	 * @param bool $clone
 	 * @return object
 	 * @throws Exception
 	 */
-	public function update(object $object, array|object $data) : object {
-		return self::hydrateObject((is_object($data)) ? $this->extract($data) : $data, clone $object, true);
+	public function update(object $object, array|object $data, bool $clone = false) : object {
+		$newObject = $clone ? clone $object : $object;
+		return self::hydrateObject((is_object($data)) ? $this->extract($data) : $data, $newObject, true);
 	}
 
 	/**
