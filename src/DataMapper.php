@@ -79,7 +79,7 @@ class DataMapper extends AbstractDataMapper {
 	/**
 	 * @param array $data
 	 * @param string|object $target
-	 * @return object|mixed
+	 * @return object
 	 * @throws Exception
 	 */
 	public function hydrate(array $data, string|object $target): object {
