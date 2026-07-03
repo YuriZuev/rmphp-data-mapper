@@ -17,7 +17,7 @@ class DataMapper extends AbstractDataMapper {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function extract(object $object, callable $method = null) : array {
+	public function extract(object $object, ?callable $method = null) : array {
 		try {
 			$reflection = self::getClassReflection($object);
 
