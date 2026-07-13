@@ -7,7 +7,7 @@ namespace Rmphp\DataMapper\Attribute;
 
 use Attribute;
 
-#[Attribute([Attribute::TARGET_PROPERTY])]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Map {
 
 	public function __construct(

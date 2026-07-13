@@ -8,7 +8,7 @@ Stable version
 composer require rmphp/data-mapper
 ```
 ```bash
-composer require rmphp/data-mapper:"^1.1"
+composer require rmphp/data-mapper:"^1.2"
 ```
 
 
