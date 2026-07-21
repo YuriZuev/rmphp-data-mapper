@@ -14,10 +14,11 @@ class DataMapper extends AbstractDataMapper {
 	/**
 	 * @param object $object
 	 * @param callable|null $method
+	 * @param bool $extractArrays
 	 * @return array
 	 * @throws Exception
 	 */
-	public function extract(object $object, ?callable $method = null) : array {
+	private function doExtract(object $object, ?callable $method, bool $extractArrays) : array {
 		try {
 			$reflection = self::getClassReflection($object);
 
@@ -42,7 +43,15 @@ class DataMapper extends AbstractDataMapper {
 				if($property->isInitialized($object)) {
 					$propertyValue = $property->getValue($object);
 
-					if(is_array($propertyValue)) continue;
+					if(is_array($propertyValue)) {
+						if($extractArrays) {
+							$fieldValue[$fieldName] = array_map(
+								fn($item) => is_object($item) ? $this->extractDeep($item) : $item,
+								$propertyValue
+							);
+						}
+						continue;
+					}
 
 					if($reflection->hasMethod('get'.ucfirst($propertyName))){
 						$fieldValue[$fieldName] = $object->{'get'.ucfirst($propertyName)}();
@@ -73,7 +82,26 @@ class DataMapper extends AbstractDataMapper {
 		catch(ReflectionException $exception){
 			throw new Exception($exception->getMessage());
 		}
+	}
 
+	/**
+	 * @param object $object
+	 * @param callable|null $method
+	 * @return array
+	 * @throws Exception
+	 */
+	public function extract(object $object, ?callable $method = null) : array {
+		return $this->doExtract($object, $method, false);
+	}
+
+	/**
+	 * @param object $object
+	 * @param callable|null $method
+	 * @return array
+	 * @throws Exception
+	 */
+	public function extractDeep(object $object, ?callable $method = null) : array {
+		return $this->doExtract($object, $method, true);
 	}
 
 	/**
