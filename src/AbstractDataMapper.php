@@ -20,6 +20,7 @@ abstract class AbstractDataMapper {
 
 	/**
 	 * @throws Exception
+	 * @throws DataMapperException Если строгое (strict) свойство не удалось инициализировать при гидратации
 	 */
 	protected static function hydrateObject(array $data, string|object $target, bool $update = false): mixed {
 		try {
@@ -32,7 +33,7 @@ abstract class AbstractDataMapper {
 				$propertyName = $property->getName();
 				$mapAttribute = self::getMapAttribute($object, $property);
 
-				if($mapAttribute->ignore) continue;
+				if($mapAttribute->ignore || $mapAttribute->ignoreHydrate) continue;
 
 				// по значению а атрибуте
 				if($mapAttribute->hydrateFrom && array_key_exists($mapAttribute->hydrateFrom, $data)){
@@ -99,6 +100,11 @@ abstract class AbstractDataMapper {
 						$object->{$propertyName} = $value[$propertyName];
 					}
 				}
+
+				// Strict: обязательное поле не инициализировано - объект не создаётся
+				if($mapAttribute->strict && !$property->isInitialized($object)){
+					throw new DataMapperException("Property '{$propertyName}' is required (strict) but was not initialized while hydrating ".get_class($object));
+				}
 			}
 			return $object;
 		} catch(ReflectionException $exception){
@@ -160,7 +166,7 @@ abstract class AbstractDataMapper {
 	/**
 	 * @param string $className
 	 * @param $value
-	 * @return mixed|null
+	 * @return object|null
 	 */
 	protected static function instanceByValue(string $className, $value): ?object {
 		try {
@@ -170,4 +176,3 @@ abstract class AbstractDataMapper {
 		}
 	}
 }
-

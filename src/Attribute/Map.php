@@ -15,6 +15,9 @@ class Map {
 		public ?string $extractTo = null,  // Имя ключа при экстракции
 		public bool $useSnakeCase  = true,  // SnakeCace при экстракции
 		public bool $ignore = false,        // Полностью игнорировать
+		public bool $ignoreExtract = false, // Игнорировать только при extract
+		public bool $ignoreHydrate = false, // Игнорировать только при hydrate
+		public bool $strict = false, // Обязательное поле для гидрации
 		public bool $fillNull = false,   // Включать null при экстракции
 	) {
 	}

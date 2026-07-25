@@ -28,7 +28,7 @@ class DataMapper extends AbstractDataMapper {
 
 				$mapAttribute = self::getMapAttribute($object, $property);
 
-				if($mapAttribute->ignore) continue;
+				if($mapAttribute->ignore || $mapAttribute->ignoreExtract) continue;
 
 				if($mapAttribute->extractTo){
 					$fieldName = $mapAttribute->extractTo;
@@ -109,6 +109,7 @@ class DataMapper extends AbstractDataMapper {
 	 * @param string|object $target
 	 * @return object
 	 * @throws Exception
+	 * @throws DataMapperException Если поле, отмеченное strict, не было инициализировано при гидратации
 	 */
 	public function hydrate(array $data, string|object $target): object {
 		return self::hydrateObject($data, $target);
@@ -120,6 +121,7 @@ class DataMapper extends AbstractDataMapper {
 	 * @param bool $clone
 	 * @return object
 	 * @throws Exception
+	 * @throws DataMapperException Если поле, отмеченное strict, не было инициализировано при гидратации
 	 */
 	public function update(object $object, array|object $data, bool $clone = false) : object {
 		$newObject = $clone ? clone $object : $object;
@@ -132,6 +134,7 @@ class DataMapper extends AbstractDataMapper {
 	 * @param callable|null $method
 	 * @return object
 	 * @throws Exception
+	 * @throws DataMapperException Если поле, отмеченное strict, не было инициализировано при гидратации
 	 */
 	public function map(object $source, string|object $target, ?callable $method = null): object {
 		$data = $this->extract($source, $method);
