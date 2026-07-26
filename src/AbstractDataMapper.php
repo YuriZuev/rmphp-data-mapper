@@ -33,7 +33,7 @@ abstract class AbstractDataMapper {
 				$propertyName = $property->getName();
 				$mapAttribute = self::getMapAttribute($object, $property);
 
-				if($mapAttribute->ignore || $mapAttribute->ignoreHydrate) continue;
+				if($mapAttribute->ignoreHydrate) continue;
 
 				// по значению а атрибуте
 				if($mapAttribute->hydrateFrom && array_key_exists($mapAttribute->hydrateFrom, $data)){
